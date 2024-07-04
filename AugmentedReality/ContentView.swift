@@ -42,32 +42,35 @@ struct ARViewContainer: UIViewRepresentable {
         let anchor = AnchorEntity(plane: .horizontal)
         
         // Generate spheres for protons and neutrons
-        createSpheres(for: element.numberOfProtons, color: .red, in: anchor)
-        createSpheres(for: element.numberOfNeutrons, color: .green, in: anchor)
-        createSpheres(for: element.numberOfElectrons, color: .blue, in: anchor)
+        //createSpheres(for: element.numberOfProtons, color: .red, in: anchor)
+        //createSpheres(for: element.numberOfNeutrons, color: .green, in: anchor)
+        //createSpheres(for: element.numberOfElectrons, color: .blue, in: anchor)
         
         arView.scene.addAnchor(anchor)
         
         return arView
     }
     
-    /*func updateUIView(_ uiView: ARView, context: Context) {
+    func updateUIView(_ uiView: ARView, context: Context) {
         uiView.scene.anchors.removeAll()
         
         let anchor = AnchorEntity(plane: .horizontal)
         
-        createSpheres(for: element.numberOfProtons, color: .red, in: anchor)
-        createSpheres(for: element.numberOfNeutrons, color: .green, in: anchor)
-        createSpheres(for: element.numberOfElectrons, color: .blue, in: anchor)
+        createProton(for: element.numberOfProtons, in: anchor)
+        createNeutron(for: element.numberOfNeutrons, in: anchor)
+        createElectron(for: element.numberOfElectrons, in: anchor)
         
         uiView.scene.addAnchor(anchor)
-    }*/
+    }
     
-    private func createSpheres(for count: Int, color: UIColor, in anchor: AnchorEntity) {
-        let sphereMesh = MeshResource.generateSphere(radius: 0.05)
-        let sphereMaterial = SimpleMaterial(color: color, isMetallic: true)
+    
+    // zkusit nastavit každému elementu jinou x pozici, pak by neměli překrývat
+    
+    private func createProton(for count: Int, in anchor: AnchorEntity) {
+        let sphereMesh = MeshResource.generateSphere(radius: 0.03)
+        let sphereMaterial = SimpleMaterial(color: .red, isMetallic: true)
         
-        for i in 0..<count {
+        for i in 0...count {
             let sphereEntity = ModelEntity(mesh: sphereMesh, materials: [sphereMaterial])
             let xPos = Float(i % 5) * 0.1
             let yPos = Float(i / 5) * 0.1
@@ -75,6 +78,31 @@ struct ARViewContainer: UIViewRepresentable {
             anchor.addChild(sphereEntity)
         }
     }
+    private func createNeutron(for count: Int, in anchor: AnchorEntity) {
+        let sphereMesh = MeshResource.generateSphere(radius: 0.03)
+        let sphereMaterial = SimpleMaterial(color: .green, isMetallic: true)
+        
+        for i in 0...count {
+            let sphereEntity = ModelEntity(mesh: sphereMesh, materials: [sphereMaterial])
+            let xPos = Float(i % 5) * 0.2
+            let yPos = Float(i / 5) * 0.1
+            sphereEntity.position = [xPos, yPos, 0.0]
+            anchor.addChild(sphereEntity)
+        }
+    }
+    private func createElectron(for count: Int, in anchor: AnchorEntity) {
+        let sphereMesh = MeshResource.generateSphere(radius: 0.03)
+        let sphereMaterial = SimpleMaterial(color: .blue, isMetallic: true)
+        
+        for i in 0...count {
+            let sphereEntity = ModelEntity(mesh: sphereMesh, materials: [sphereMaterial])
+            let xPos = Float(i % 5) * 0.3
+            let yPos = Float(i / 5) * 0.1
+            sphereEntity.position = [xPos, yPos, 0.0]
+            anchor.addChild(sphereEntity)
+        }
+    }
+
 }
 
 struct ContentView: View {
